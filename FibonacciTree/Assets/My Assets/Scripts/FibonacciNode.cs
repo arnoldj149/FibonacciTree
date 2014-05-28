@@ -12,13 +12,18 @@ public class FibonacciNode : MonoBehaviour {
 	/// </summary>
 	private int data;
 	/// <summary>
-	/// Accessor for data.
+	/// Accessor for data. Upon being set, the text for this node is also set
+	/// to the string version of the data.
 	/// </summary>
 	/// <value>The new data.</value>
 	public int Data
 	{
 		get { return data; }
-		set { data = value; }
+		set 
+		{ 
+			data = value;
+			Text = data.ToString();
+		}
 	}
 	/// <summary>
 	/// The left child node of this node.
@@ -46,6 +51,16 @@ public class FibonacciNode : MonoBehaviour {
 	{
 		get { return right; }
 		set { right = value; }
+	}
+
+	/// <summary>
+	/// Gets or sets the first TextMesh component in this GameObject's hierarchy.
+	/// </summary>
+	/// <value>The new text.</value>
+	public string Text
+	{
+		get { return GetComponentInChildren<TextMesh>().text; }
+		set { GetComponentInChildren<TextMesh>().text = value; }
 	}
 #endregion
 

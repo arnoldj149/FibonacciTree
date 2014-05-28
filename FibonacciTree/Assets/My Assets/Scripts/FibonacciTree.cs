@@ -99,11 +99,11 @@ public class FibonacciTree : MonoBehaviour {
 
 					//instatiate a node prefab for the left child node and cast it as a FibonacciNode.
 					nodes[i][j] = ((GameObject)Instantiate(nodePrefab, 
-											nodes[i-1][parentIndex].transform.position + new Vector3(-maxSiblings / siblings,0,2), 
+											nodes[i-1][parentIndex].transform.position + new Vector3(-maxSiblings / siblings,0,-1), 
 					                                       Quaternion.identity)).GetComponent<FibonacciNode>();
 					//instatiate a node prefab for the right child node and cast it as a FibonacciNode.
 					nodes[i][j+1] = ((GameObject)Instantiate(nodePrefab, 
-					                        nodes[i-1][parentIndex].transform.position + new Vector3(maxSiblings / siblings,0,2), 
+					                        nodes[i-1][parentIndex].transform.position + new Vector3(maxSiblings / siblings,0,-1), 
 						                                           Quaternion.identity)).GetComponent<FibonacciNode>();
 					
 					//set the left and right children of the parent to the new node objects.
