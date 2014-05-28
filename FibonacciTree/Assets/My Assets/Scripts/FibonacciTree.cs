@@ -18,7 +18,7 @@ public class FibonacciTree : MonoBehaviour {
 	/// created as soon as a depth is specified by the user. We can take advantage of that fact and 
 	/// maintain all of the tree's data in a structured series of arrays that can be traversed 
 	/// </summary>
-	private FibonacciNode[][] nodes;
+	private FibonacciNode[][] nodes = null;
 
 	/// <summary>
 	/// Gets the root node of the tree.
@@ -33,6 +33,9 @@ public class FibonacciTree : MonoBehaviour {
 	void Start () {
 		//Test by building the tree here rather than through user input.
 		BuildTree(5);
+
+		//Test DestroyTree by destroying the tree immediately after its creation above.
+		DestroyTree();
 	}
 	
 	// Update is called once per frame
@@ -149,5 +152,28 @@ public class FibonacciTree : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// Destroys each node instance in the tree if it exists and sets nodes to null.
+	/// </summary>
+	void DestroyTree()
+	{
+		//check to make sure the there is a tree to delete. If not, return.
+		if (nodes == null)
+			return;
 
+		//for each level in the tree...
+		for (int i = nodes.Length; --i >= 0;)
+		{
+			//for each sibling in the level...
+			for (int j = nodes[i].Length; --j >= 0;)
+			{
+				//destroy every node GameObject.
+				GameObject.Destroy(nodes[i][j].gameObject);
+			}
+			//set the array to reference null after the level has been destroyed.
+			nodes[i] = null;
+		}
+		//and finally, set the array of arrays to reference null when the tree has been destroyed.
+		nodes = null;
+	}
 }
