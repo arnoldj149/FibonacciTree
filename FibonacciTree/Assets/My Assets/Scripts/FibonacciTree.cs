@@ -35,7 +35,7 @@ public class FibonacciTree : MonoBehaviour {
 		BuildTree(5);
 
 		//Test DestroyTree by destroying the tree immediately after its creation above.
-		DestroyTree();
+		DestroyTree(3);
 	}
 	
 	// Update is called once per frame
@@ -154,8 +154,10 @@ public class FibonacciTree : MonoBehaviour {
 
 	/// <summary>
 	/// Destroys each node instance in the tree if it exists and sets nodes to null.
+	/// The destruction can be delayed by entering a delay value as a parameter.
 	/// </summary>
-	void DestroyTree()
+	/// <param name="delay">The time in seconds to delay the destruction of the nodes.</param>
+	void DestroyTree(float delay = 0.0f)
 	{
 		//check to make sure the there is a tree to delete. If not, return.
 		if (nodes == null)
@@ -168,7 +170,7 @@ public class FibonacciTree : MonoBehaviour {
 			for (int j = nodes[i].Length; --j >= 0;)
 			{
 				//destroy every node GameObject.
-				GameObject.Destroy(nodes[i][j].gameObject);
+				GameObject.Destroy(nodes[i][j].gameObject, delay);
 			}
 			//set the array to reference null after the level has been destroyed.
 			nodes[i] = null;
