@@ -89,38 +89,46 @@ public class FibonacciTree : MonoBehaviour {
 			//otherwise...
 			else
 			{
+				FibonacciNode parent;
+				FibonacciNode leftChild;
+				FibonacciNode rightChild;
 				//for each pair of children in this generation...
 				for (int j = 0; j < siblings; j += 2)
 				{
 					//find the index of the parent in generation i - 1 for these two children.
 					parentIndex = j / 2;
+					//save a reference to the parent node for readability sake.
+					parent = nodes[i-1][parentIndex].GetComponent<FibonacciNode>();
 
-					//FibonacciNode parent = nodes[i][j].GetComponent<FibonacciNode>();
-
-					//instatiate a node prefab for the left child node and cast it as a FibonacciNode.
+					//instatiate a node prefab for the left and right child node and cast it as a FibonacciNode.
+					//the left and right nodes' positions are an offset from the parent node.
 					nodes[i][j] = ((GameObject)Instantiate(nodePrefab, 
-											nodes[i-1][parentIndex].transform.position + new Vector3(-maxSiblings / siblings,0,-1), 
-					                                       Quaternion.identity)).GetComponent<FibonacciNode>();
-					//instatiate a node prefab for the right child node and cast it as a FibonacciNode.
+											parent.transform.position + new Vector3(-maxSiblings / siblings,-1,0), 
+					                        Quaternion.identity)).GetComponent<FibonacciNode>();
+
 					nodes[i][j+1] = ((GameObject)Instantiate(nodePrefab, 
-					                        nodes[i-1][parentIndex].transform.position + new Vector3(maxSiblings / siblings,0,-1), 
-						                                           Quaternion.identity)).GetComponent<FibonacciNode>();
-					
+					                        parent.transform.position + new Vector3(maxSiblings / siblings,-1,0), 
+                                            Quaternion.identity)).GetComponent<FibonacciNode>();
+
+					//save a reference to the left and right child for readability sake.
+					leftChild = nodes[i][j];
+					rightChild = nodes[i][j+1];
+
 					//set the left and right children of the parent to the new node objects.
-					nodes[i-1][parentIndex].Left = nodes[i][j];
-					nodes[i-1][parentIndex].Right = nodes[i][j+1];
+					parent.Left = leftChild;
+					parent.Right = rightChild;
 
 					//find data for left child based on previous generation.
 					if (j > 0)
 					{
 						//if these are not the left most children in the generation, then the left
 						//child's data is equal to its parent's data + the parent's left sibling's data.
-						nodes[i][j].Data = nodes[i-1][parentIndex-1].Data + nodes[i-1][parentIndex].Data;
+						leftChild.Data = nodes[i-1][parentIndex-1].Data + parent.Data;
 					}
 					else
 					{
 						//otherwise the left child's data is equal to the parent's data.
-						nodes[i][j].Data = nodes[i-1][parentIndex].Data;
+						leftChild.Data = parent.Data;
 					}
 
 					//find data for right child based on previous generation.
@@ -128,19 +136,16 @@ public class FibonacciTree : MonoBehaviour {
 					{
 						//if these are not the right most children in the generation, then the right
 						//child's data is equal to its parent's data + the parent's right sibling's data.
-						nodes[i][j+1].Data = nodes[i-1][parentIndex].Data + nodes[i-1][parentIndex+1].Data;
+						rightChild.Data = parent.Data + nodes[i-1][parentIndex+1].Data;
 					}
 					else
 					{
 						//otherwise the right child's data is equal to the parent's data.
-						nodes[i][j+1].Data = nodes[i-1][parentIndex].Data;
+						rightChild.Data = parent.Data;
 					}
 				}
 			}
 		}
-
-		//Now Instatiate GameObjects to represent the tree visually
-
 
 	}
 

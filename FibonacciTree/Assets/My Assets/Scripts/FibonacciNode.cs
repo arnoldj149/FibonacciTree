@@ -36,7 +36,11 @@ public class FibonacciNode : MonoBehaviour {
 	public FibonacciNode Left
 	{
 		get { return left; }
-		set { left = value; }
+		set 
+		{ 
+			left = value;
+			left.LineEnd = transform.position;
+		}
 	}
 
 	/// <summary>
@@ -50,7 +54,11 @@ public class FibonacciNode : MonoBehaviour {
 	public FibonacciNode Right
 	{
 		get { return right; }
-		set { right = value; }
+		set 
+		{ 
+			right = value;
+			right.LineEnd = transform.position;
+		}
 	}
 
 	/// <summary>
@@ -62,11 +70,29 @@ public class FibonacciNode : MonoBehaviour {
 		get { return GetComponentInChildren<TextMesh>().text; }
 		set { GetComponentInChildren<TextMesh>().text = value; }
 	}
+
+	/// <summary>
+	/// Sets the line start point for the first LineRenderer attached to this GameObject.
+	/// </summary>
+	/// <value>The line start point.</value>
+	public Vector3 LineStart
+	{
+		set { GetComponentInChildren<LineRenderer>().SetPosition(0, value); }
+	}
+	/// <summary>
+	/// Sets the line end point for the first LineRenderer attached to this GameObject.
+	/// </summary>
+	/// <value>The line end point.</value>
+	public Vector3 LineEnd
+	{
+		set { GetComponentInChildren<LineRenderer>().SetPosition(1, value); }
+	}
 #endregion
 
 	// Use this for initialization
 	void Start () {
-		
+		// Start the line so that its start position begins at the center of the node.
+		LineStart = transform.position;
 	}
 	
 	// Update is called once per frame
