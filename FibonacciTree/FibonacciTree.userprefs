@@ -1,9 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\My Assets\Scripts\FibonacciTree.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\My Assets\Scripts\FibonacciCamera.cs">
     <Files>
-      <File FileName="Assets\My Assets\Scripts\FibonacciTree.cs" Line="159" Column="92" />
-      <File FileName="Assets\My Assets\Scripts\FibonacciNode.cs" Line="96" Column="3" />
+      <File FileName="Assets\My Assets\Scripts\FibonacciTree.cs" Line="36" Column="5" />
+      <File FileName="Assets\My Assets\Scripts\FibonacciNode.cs" Line="59" Column="18" />
+      <File FileName="Assets\My Assets\Scripts\FibonacciCamera.cs" Line="70" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

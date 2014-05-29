@@ -33,7 +33,7 @@ public class FibonacciTree : MonoBehaviour {
 		BuildTree(5);
 
 		//Test DestroyTree by destroying the tree immediately after its creation above.
-		DestroyTree(3);
+		//DestroyTree(3);
 	}
 	
 	// Update is called once per frame
