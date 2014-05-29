@@ -13,12 +13,10 @@ public class FibonacciTree : MonoBehaviour {
 	public GameObject nodePrefab;
 
 	/// <summary>
-	/// The nodes for the tree. Since the nature of this tree is that it is created based on a series
-	/// of rules rather than through something more random like user input, the entire tree can be
-	/// created as soon as a depth is specified by the user. We can take advantage of that fact and 
-	/// maintain all of the tree's data in a structured series of arrays that can be traversed 
+	/// The root node for the tree. If the tree has been destroyed or was never created,
+	/// the root is null.
 	/// </summary>
-	private FibonacciNode[][] nodes = null;
+	private FibonacciNode root = null;
 
 	/// <summary>
 	/// Gets the root node of the tree.
@@ -26,7 +24,7 @@ public class FibonacciTree : MonoBehaviour {
 	/// <value>The root.</value>
 	public FibonacciNode Root
 	{
-		get { return nodes[0][0]; }
+		get { return root; }
 	}
 
 	// Use this for initialization
@@ -58,6 +56,10 @@ public class FibonacciTree : MonoBehaviour {
 	/// create only the root. If the depth is less than 1, the tree is not constructed.</param>
 	void BuildTree(uint depth)
 	{
+		//if there is already a tree, destroy that first.
+		if (root != null)
+			DestroyTree();
+
 		//if depth is less than 1, no tree is generated.
 		if (depth < 1)
 			return;
@@ -65,8 +67,12 @@ public class FibonacciTree : MonoBehaviour {
 		//the number of siblings at the lowest level of this tree (Used to determine positioning of nodes).
 		float maxSiblings = Mathf.Pow (2,depth-1);
 
-		//otherwise create a temporary array of FibonacciNode arrays large enough for 'depth' number of generations.
-		nodes = new FibonacciNode[depth][];
+		// Otherwise create a temporary array of FibonacciNode arrays large enough for 'depth' number of generations.
+		// Note: Since the nature of this tree is that it is created based on a series of rules rather than through 
+		// something more random like user input, the entire tree can be created as soon as a depth is specified by 
+		// the user. We can take advantage of that fact and construct the tree's nodes in a structured series of 
+		// arrays that can be traversed more freely than a binary tree in order to find parent and parent sibling data.
+		FibonacciNode[][] nodes = new FibonacciNode[depth][];
 
 		//now generate data for each level of the tree:
 
@@ -86,8 +92,11 @@ public class FibonacciTree : MonoBehaviour {
 				//instatiate a node prefab for the root node and cast it as a FibonacciNode.
 				nodes[i][0] = ((GameObject)GameObject.Instantiate(nodePrefab, Vector3.zero, Quaternion.identity)).GetComponent<FibonacciNode>();
 
+				//set the first node as the root
+				root = nodes[i][0];
+
 				//the root is given the value 1.
-				nodes[i][0].Data = 1;
+				root.Data = 1;
 			}
 			//otherwise...
 			else
@@ -153,29 +162,38 @@ public class FibonacciTree : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Destroys each node instance in the tree if it exists and sets nodes to null.
+	/// Destroys each node in the tree if it exists and sets the root to null.
 	/// The destruction can be delayed by entering a delay value as a parameter.
 	/// </summary>
 	/// <param name="delay">The time in seconds to delay the destruction of the nodes.</param>
 	void DestroyTree(float delay = 0.0f)
 	{
 		//check to make sure the there is a tree to delete. If not, return.
-		if (nodes == null)
+		if (root == null)
 			return;
 
-		//for each level in the tree...
-		for (int i = nodes.Length; --i >= 0;)
-		{
-			//for each sibling in the level...
-			for (int j = nodes[i].Length; --j >= 0;)
-			{
-				//destroy every node GameObject.
-				GameObject.Destroy(nodes[i][j].gameObject, delay);
-			}
-			//set the array to reference null after the level has been destroyed.
-			nodes[i] = null;
-		}
-		//and finally, set the array of arrays to reference null when the tree has been destroyed.
-		nodes = null;
+		//if the tree is not null, recursively destroy the tree from the root down.
+		RecurseDestroyTree(root, delay);
+		root = null;
+	}
+
+	/// <summary>
+	/// Recursively destroys each subtree within the tree. This function is private to prevent
+	/// the tree from destroying any nodes that are not connected to its root.
+	/// </summary>
+	/// <param name="subRoot">The root of a subtree within this FibonacciTree.</param>
+	/// <param name="delay">The time in seconds to delay the destruction of the nodes.</param>
+	private void RecurseDestroyTree(FibonacciNode subRoot, float delay)
+	{
+		//if the supplied subtree has a left child, destroy the left child's subtree first.
+		if (subRoot.Left != null)
+			RecurseDestroyTree(subRoot.Left, delay);
+
+		//if the supplied subtree has a right child, destroy the right child's subtree next.
+		if (subRoot.Right != null)
+			RecurseDestroyTree(subRoot.Right, delay);
+
+		//destroy the root of the supplied subtree last.
+		GameObject.Destroy(subRoot.gameObject, delay);
 	}
 }

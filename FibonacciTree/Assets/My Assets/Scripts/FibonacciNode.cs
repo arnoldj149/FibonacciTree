@@ -28,7 +28,7 @@ public class FibonacciNode : MonoBehaviour {
 	/// <summary>
 	/// The left child node of this node.
 	/// </summary>
-	private FibonacciNode left;
+	private FibonacciNode left = null;
 	/// <summary>
 	/// Accessor for the left child.
 	/// </summary>
@@ -46,7 +46,7 @@ public class FibonacciNode : MonoBehaviour {
 	/// <summary>
 	/// The right child node of this node.
 	/// </summary>
-	private FibonacciNode right;
+	private FibonacciNode right = null;
 	/// <summary>
 	/// Accessor for the right child.
 	/// </summary>
