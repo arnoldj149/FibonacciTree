@@ -6,7 +6,7 @@ public class FibonacciCamera : MonoBehaviour {
 	/// <summary>
 	/// The speed at which the camera can move.
 	/// </summary>
-	public float speed = 1.0f;
+	public float speed = 20.0f;
 	/// <summary>
 	/// The distance away from the current node the camera tries to view it from.
 	/// </summary>
