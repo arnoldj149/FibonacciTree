@@ -4,9 +4,14 @@ using System.Collections;
 public class FibonacciCamera : MonoBehaviour {
 
 	/// <summary>
-	/// The speed at which the camera can move.
+	/// The amount of time in seconds it takes the camera to move from one node
+	/// to the next node when traversing.
 	/// </summary>
-	public float speed = 20.0f;
+	public float traversalTime = 0.5f;
+	private Vector3 startMove;
+	private Vector3 endMove;
+	private float lastMoveTime;
+
 	/// <summary>
 	/// The distance away from the current node the camera tries to view it from.
 	/// </summary>
@@ -23,7 +28,8 @@ public class FibonacciCamera : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		startMove = transform.position;
+		endMove = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -31,21 +37,8 @@ public class FibonacciCamera : MonoBehaviour {
 		//make sure the current node is not null. If it is, try to make the tree's root the current.
 		if (current != null)
 		{
-			//the target position is where the camera wants to be (viewDistance away from the current node).
-			Vector3 target = current.transform.position - new Vector3(0,0,viewDistance);
-			//the distance between the camera's current position and the target position (how far it needs to go).
-			Vector3 distance = target - transform.position;
-
-			//if it can reach the target right now, move to it.
-			if (distance.magnitude < speed * Time.deltaTime)
-			{
-				transform.position = target;
-			}
-			//otherwise, use speed and time to move it closer to the target position.
-			else
-			{
-				transform.position += distance.normalized * speed * Time.deltaTime;
-			}
+			//interpolate the camera's position between the last node and the next node.
+			transform.position = Vector3.Lerp(startMove, endMove, (Time.time - lastMoveTime) / traversalTime);
 
 			//some rough input handling for traversal testing. Controls:
 			//LeftArrow= traverse left
@@ -66,7 +59,7 @@ public class FibonacciCamera : MonoBehaviour {
 		}
 		else if (tree != null)
 		{
-			current = tree.Root;
+			ResetToRoot();
 		}
 	}
 
@@ -79,9 +72,15 @@ public class FibonacciCamera : MonoBehaviour {
 		//if the current node does not have a left child, we can't traverse it.
 		if (current.Left == null)
 			return false;
-		
-		//otherwise we can and we do.
+
+		//otherwise, traverse to the left child.
 		current = current.Left;
+
+		//lastly, setup the camera to interpolate from its current position to the new node.
+		startMove = transform.position;
+		endMove = current.transform.position - new Vector3(0,0,viewDistance);
+		lastMoveTime = Time.time;
+
 		return true;
 	}
 
@@ -95,17 +94,35 @@ public class FibonacciCamera : MonoBehaviour {
 		if (current.Right == null)
 			return false;
 
-		//otherwise we can and we do.
+		//otherwise, traverse to the right child.
 		current = current.Right;
+
+		//lastly, setup the camera to interpolate from its current position to the new node.
+		startMove = transform.position;
+		endMove = current.transform.position - new Vector3(0,0,viewDistance);
+		lastMoveTime = Time.time;
+
 		return true;
 	}
 
 	/// <summary>
 	/// Resets the current node to the root of the tree.
 	/// </summary>
-	void ResetToRoot()
+	/// <returns><c>true</c>, if the traversal was reset, <c>false</c> if there is no tree to reset.</returns>
+	bool ResetToRoot()
 	{
 		//sets the current node to the root.
 		current = tree.Root;
+
+		//if the root was null, we don't have a tree to reset on, so return false.
+		if (current == null)
+			return false;
+
+		//lastly, setup the camera to interpolate from its current position to the new node.
+		startMove = transform.position;
+		endMove = current.transform.position - new Vector3(0,0,viewDistance);
+		lastMoveTime = Time.time;
+
+		return true;
 	}
 }
