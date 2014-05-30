@@ -29,11 +29,7 @@ public class FibonacciTree : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//Test by building the tree here rather than through user input.
-		BuildTree(5);
 
-		//Test DestroyTree by destroying the tree immediately after its creation above.
-		//DestroyTree(3);
 	}
 	
 	// Update is called once per frame
@@ -54,7 +50,7 @@ public class FibonacciTree : MonoBehaviour {
 	/// </summary>
 	/// <param name="depth">The number of generations to create in the tree. A depth of 1 will 
 	/// create only the root. If the depth is less than 1, the tree is not constructed.</param>
-	void BuildTree(uint depth)
+	private void BuildTree(uint depth)
 	{
 		//if there is already a tree, destroy that first.
 		if (root != null)
@@ -166,7 +162,7 @@ public class FibonacciTree : MonoBehaviour {
 	/// The destruction can be delayed by entering a delay value as a parameter.
 	/// </summary>
 	/// <param name="delay">The time in seconds to delay the destruction of the nodes.</param>
-	void DestroyTree(float delay = 0.0f)
+	private void DestroyTree(float delay = 0.0f)
 	{
 		//check to make sure the there is a tree to delete. If not, return.
 		if (root == null)
@@ -195,5 +191,22 @@ public class FibonacciTree : MonoBehaviour {
 
 		//destroy the root of the supplied subtree last.
 		GameObject.Destroy(subRoot.gameObject, delay);
+	}
+
+	// Creates the GUI for the tree on the GUI event
+	void OnGUI () 
+	{
+		// Creates a box around the buttons.
+		GUI.Box(new Rect(10,10,160,120), "Fibonacci Tree");
+		
+		// A button that says "Build Tree" that tells the FibonacciTree script to build a tree.
+		if(GUI.Button(new Rect(20,40,140,30), "Build Tree")) {
+			BuildTree(5);
+		}
+		
+		// A button that says "Destroy Tree" that tells the FibonacciTree script to destroy the tree.
+		if(GUI.Button(new Rect(20,80,140,30), "Destroy Tree")) {
+			DestroyTree();
+		}
 	}
 }
