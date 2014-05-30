@@ -30,6 +30,12 @@ public class FibonacciCamera : MonoBehaviour {
 	/// </summary>
 	private FibonacciNode current;
 
+	/// <summary>
+	/// The message displayed at the bottom of the GUI box
+	/// that gives feedback to the user about their last input.
+	/// </summary>
+	private string errorMsg = "";
+
 	// Use this for initialization
 	void Start () {
 		startMove = transform.position;
@@ -142,5 +148,58 @@ public class FibonacciCamera : MonoBehaviour {
 		lastMoveTime = Time.time;
 
 		return true;
+	}
+
+	// Creates the GUI for the camera on the GUI event
+	void OnGUI () 
+	{
+		// Creates a box around the buttons.
+		GUI.Box(new Rect(10,220,250,200), "Traversal Controls");
+
+		if(current != null)
+		{
+			GUI.Label(new Rect(20,250,230,100), "Hotkeys: Left=LeftArrow, Right=RightArrow, Space=Reset");
+
+			// A button that says "Build Tree" that tells the FibonacciTree script to build a tree.
+			if(GUI.Button(new Rect(20,330,110,30), "Traverse Left")) 
+			{
+				if (TraverseLeft())
+				{
+					errorMsg = "Traversing to left child.";
+				}
+				else
+				{
+					errorMsg = "There is no left child!";
+				}
+			}
+			
+			// A button that says "Destroy Tree" that tells the FibonacciTree script to destroy the tree.
+			if(GUI.Button(new Rect(140,330,110,30), "Traverse Right")) 
+			{
+				if (TraverseRight())
+				{
+					errorMsg = "Traversing to right child.";
+				}
+				else
+				{
+					errorMsg = "There is no right child!";
+				}
+			}
+
+			// A button that says "Destroy Tree" that tells the FibonacciTree script to destroy the tree.
+			if(GUI.Button(new Rect(20,290,230,30), "Reset")) 
+			{
+				if (ResetToRoot())
+				{
+					errorMsg = "Reset to root node.";
+				}
+				else
+				{
+					errorMsg = "There is no tree to reset!";
+				}
+			}
+		}
+		
+		GUI.Label(new Rect(20,370,230,100), errorMsg);
 	}
 }
