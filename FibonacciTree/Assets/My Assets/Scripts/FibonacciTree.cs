@@ -27,6 +27,18 @@ public class FibonacciTree : MonoBehaviour {
 		get { return root; }
 	}
 
+	/// <summary>
+	/// The text in the text field of the GUI that is parsed into 
+	/// a level when the tree is built, if possible.
+	/// </summary>
+	private string levelField = "4";
+
+	/// <summary>
+	/// The message displayed at the bottom of the GUI box
+	/// that gives feedback to the user about their last input.
+	/// </summary>
+	private string errorMsg = "Enter a level in the above text field and press the \"Build Tree\" button.";
+
 	// Use this for initialization
 	void Start () {
 
@@ -197,16 +209,42 @@ public class FibonacciTree : MonoBehaviour {
 	void OnGUI () 
 	{
 		// Creates a box around the buttons.
-		GUI.Box(new Rect(10,10,160,120), "Fibonacci Tree");
-		
+		GUI.Box(new Rect(10,10,250,200), "Fibonacci Tree");
+
+		GUI.Label(new Rect(20,40,80,20), "Tree Level:");
+		levelField = GUI.TextField(new Rect(110,40,140,20), levelField);
+
 		// A button that says "Build Tree" that tells the FibonacciTree script to build a tree.
-		if(GUI.Button(new Rect(20,40,140,30), "Build Tree")) {
-			BuildTree(5);
+		if(GUI.Button(new Rect(20,70,230,30), "Build Tree")) 
+		{
+			uint level = 0;
+			//try to parse the text in the above textfield into a uint. on success,
+			//the tree is built using that parsed value.
+			if (uint.TryParse(levelField, out level))
+			{
+				BuildTree(level);
+				errorMsg = "Tree created with a level of " + level + ".";
+			}
+			else
+			{
+				errorMsg = "ERROR: Tree level must be an unsigned integer!";
+			}
 		}
 		
 		// A button that says "Destroy Tree" that tells the FibonacciTree script to destroy the tree.
-		if(GUI.Button(new Rect(20,80,140,30), "Destroy Tree")) {
-			DestroyTree();
+		if(GUI.Button(new Rect(20,110,230,30), "Destroy Tree")) 
+		{
+			if (root != null)
+			{
+				DestroyTree();
+				errorMsg = "Tree destroyed.";
+			}
+			else
+			{
+				errorMsg = "ERROR: You have to make a tree before you can destroy it!";
+			}
 		}
+
+		GUI.Label(new Rect(20,150,230,100), errorMsg);
 	}
 }
