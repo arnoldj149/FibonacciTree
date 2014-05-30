@@ -156,11 +156,14 @@ public class FibonacciCamera : MonoBehaviour {
 		// Creates a box around the buttons.
 		GUI.Box(new Rect(10,220,250,200), "Traversal Controls");
 
+		// No point in displaying the traversal buttons if there is no tree to traverse on!
+		// It also makes it easier for the user to notice these controls if they only pop up
+		// AFTER the user creates a tree.
 		if(current != null)
 		{
 			GUI.Label(new Rect(20,250,230,100), "Hotkeys: Left=LeftArrow, Right=RightArrow, Space=Reset");
 
-			// A button that says "Build Tree" that tells the FibonacciTree script to build a tree.
+			// A button that says "Traverse Left" that traverses to the left child of the current node.
 			if(GUI.Button(new Rect(20,330,110,30), "Traverse Left")) 
 			{
 				if (TraverseLeft())
@@ -173,7 +176,7 @@ public class FibonacciCamera : MonoBehaviour {
 				}
 			}
 			
-			// A button that says "Destroy Tree" that tells the FibonacciTree script to destroy the tree.
+			// A button that says "Traverse Right" that traverses to the right child of the current node.
 			if(GUI.Button(new Rect(140,330,110,30), "Traverse Right")) 
 			{
 				if (TraverseRight())
@@ -186,7 +189,7 @@ public class FibonacciCamera : MonoBehaviour {
 				}
 			}
 
-			// A button that says "Destroy Tree" that tells the FibonacciTree script to destroy the tree.
+			// A button that says "Reset" that resets the traversal back at the tree's root.
 			if(GUI.Button(new Rect(20,290,230,30), "Reset")) 
 			{
 				if (ResetToRoot())
@@ -199,7 +202,8 @@ public class FibonacciCamera : MonoBehaviour {
 				}
 			}
 		}
-		
+
+		//Display errors and feedback here.
 		GUI.Label(new Rect(20,370,230,100), errorMsg);
 	}
 }
