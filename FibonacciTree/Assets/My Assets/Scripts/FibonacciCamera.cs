@@ -16,6 +16,10 @@ public class FibonacciCamera : MonoBehaviour {
 	/// The distance away from the current node the camera tries to view it from.
 	/// </summary>
 	public float viewDistance = 8.0f;
+	/// <summary>
+	/// The amount to scale each node while it is active.
+	/// </summary>
+	public float inflateValue = 1.3f;
 
 	/// <summary>
 	/// The tree we are looking at and traversing.
@@ -73,8 +77,12 @@ public class FibonacciCamera : MonoBehaviour {
 		if (current.Left == null)
 			return false;
 
+		//deflate current node before we traverse.
+		current.transform.localScale /= inflateValue;
 		//otherwise, traverse to the left child.
 		current = current.Left;
+		//inflate new current node.
+		current.transform.localScale *= inflateValue;
 
 		//lastly, setup the camera to interpolate from its current position to the new node.
 		startMove = transform.position;
@@ -94,8 +102,12 @@ public class FibonacciCamera : MonoBehaviour {
 		if (current.Right == null)
 			return false;
 
+		//deflate current node before we traverse.
+		current.transform.localScale /= inflateValue;
 		//otherwise, traverse to the right child.
 		current = current.Right;
+		//inflate new current node.
+		current.transform.localScale *= inflateValue;
 
 		//lastly, setup the camera to interpolate from its current position to the new node.
 		startMove = transform.position;
@@ -111,8 +123,14 @@ public class FibonacciCamera : MonoBehaviour {
 	/// <returns><c>true</c>, if the traversal was reset, <c>false</c> if there is no tree to reset.</returns>
 	bool ResetToRoot()
 	{
+		//if the current node is not null, we need to deflate it
+		if (current != null)
+			current.transform.localScale /= inflateValue;
 		//sets the current node to the root.
 		current = tree.Root;
+		//if the new current node is not null, we need to inflate it
+		if (current != null)
+			current.transform.localScale *= inflateValue;
 
 		//if the root was null, we don't have a tree to reset on, so return false.
 		if (current == null)
