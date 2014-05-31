@@ -167,6 +167,11 @@ public class FibonacciTree : MonoBehaviour {
 			}
 		}
 
+		//After building the tree, we make sure to set the focus so that if a textfield
+		//has the focus, it doesn't prevent the user from using the keyboard hotkeys for traversal.
+		GUI.SetNextControlName("");
+		GUI.FocusControl("");
+
 	}
 
 	/// <summary>
